@@ -1,25 +1,33 @@
-import os
+import socket
+import sys
 
-from pyftpdlib.authorizers import DummyAuthorizer
-from pyftpdlib.handlers import FTPHandler
-from pyftpdlib.servers import FTPServer
+host = "127.0.0.1"
+port = 65432
 
-def main():
-
-    authorizer = DummyAuthorizer()
-
-    authorizer.add_user('user', '123', '/Users/corwi', perm='elradfmwMT')
-    authorizer.add_anonymous(os.getcwd())
-
-    # Instantiate FTP handler class
-    handler = FTPHandler
-    handler.authorizer = authorizer
-
-    handler.banner = "Why hello there."
-
-    server = FTPServer(("127.0.0.1", 21), handler)
-
-    server.serve_forever()
-
-if __name__ == '__main__':
-    main()
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket.bind((host, port))
+socket.listen(1)
+while True:
+    connection, address = socket.accept()
+    command = connection.recv(1024)
+    if (command == 'quit'):
+        break
+    else:
+        commands = command.split(' ', 1)
+        file = commands[1]
+        if (commands[0] == 'UPLD'):
+            with open(file, 'wb') as writefile:
+                while True:
+                    data = connection.recv(1024)
+                    #if data empty
+                    if not data:
+                        break
+                    writefile.write(data)
+                    writefile.close()
+                    break
+        elif (commands[0] == 'DWLD'):
+            with open(file, 'rb') as getfile:
+                for data in getfile:
+                    connection.sendall(data)
+    connection.close()
+socket.close()
