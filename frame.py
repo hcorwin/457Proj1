@@ -9,16 +9,35 @@ BUFFER = 1024
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 def connect():
+    s.connect(HOST, PORT)
     print("You have been connected")
 
-def upload():
-    print("You have been disconnected")
+def upload(fullcommand):
+    s.send(fullcommand)
+    commands = fullcommand.split(' ', 1)
+    file = commands[1]
+    with open(file, 'rb') as infile:
+        for data in infile:
+            s.sendall(data)
+    print("File uploaded")
+    return
 
 def givelist():
     print("Here is your list")
 
-def download():
-    print("What would you like to download?")
+def download(fullcommand):
+    s.send(fullcommand)
+    commands = fullcommand.split(' ', 1)
+    file = commands[1]
+    with open(file, 'wb') as outfile:
+        while True:
+            data = s.recv(1024)
+            if not data:
+                break
+            outfile.write(data)
+        outfile.close()
+    print("File downloaded")
+    return
 
 def delete():
     print("What would you like to delete?")
