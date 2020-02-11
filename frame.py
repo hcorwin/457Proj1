@@ -5,11 +5,13 @@ import struct
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
+BUFFER = 1024
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 def connect():
     print("You have been connected")
 
-def disconnect():
+def upload():
     print("You have been disconnected")
 
 def givelist():
@@ -29,8 +31,8 @@ while True:
         break
     elif str.upper() == "CONN":
         connect()
-    elif str.upper() == "DISC":
-        disconnect()
+    elif str.upper() == "UPLD":
+        upload()
     elif str.upper() == "LIST":
         givelist()
     elif str.upper() == "DWLD":
