@@ -10,24 +10,25 @@ socket.listen(1)
 while True:
     connection, address = socket.accept()
     command = connection.recv(1024)
+    command.decode('utf-8')
     if (command == 'quit'):
         break
     else:
-        commands = command.split(' ', 1)
+        commands = command.decode().split(' ', 1)
         file = commands[1]
         if (commands[0] == 'UPLD'):
-            with open(file, 'wb') as writefile:
+            with open(file, 'w') as writefile:
                 while True:
                     data = connection.recv(1024)
                     #if data empty
                     if not data:
                         break
-                    writefile.write(data)
+                    writefile.write(data.decode('utf-8'))
                     writefile.close()
                     break
         elif (commands[0] == 'DWLD'):
-            with open(file, 'rb') as getfile:
+            with open(file, 'r') as getfile:
                 for data in getfile:
-                    connection.sendall(data)
+                    connection.sendall(data.encode('utf-8'))
     connection.close()
 socket.close()
