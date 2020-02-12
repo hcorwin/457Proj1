@@ -39,9 +39,6 @@ def download(fullcommand):
     print("File downloaded")
     return
 
-def delete():
-    print("What would you like to delete?")
-
 while True:
     str = input("Command?:\n")
     if str.upper() == "QUIT":
@@ -56,7 +53,5 @@ while True:
         givelist()
     elif str.upper() == "DWLD":
         download()
-    elif str.upper() == "DELE":
-        delete()
     else:
         print("INVALID COMMAND")
