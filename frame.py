@@ -3,22 +3,22 @@ import sys
 import os
 import struct
 
-HOST = '127.0.0.1'  # The server's hostname or IP address
+HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
 BUFFER = 1024
-s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def connect():
-    s.connect(HOST, PORT)
+def conn():
+    s.connect((HOST, PORT))
     print("You have been connected")
 
 def upload(fullcommand):
-    s.send(fullcommand)
+    s.send(fullcommand.encode('utf-8'))
     commands = fullcommand.split(' ', 1)
     file = commands[1]
-    with open(file, 'rb') as infile:
+    with open(file, 'r') as infile:
         for data in infile:
-            s.sendall(data)
+            s.sendall(data.encode('utf-8'))
     print("File uploaded")
     return
 
@@ -26,32 +26,38 @@ def givelist():
     print("Here is your list")
 
 def download(fullcommand):
-    s.send(fullcommand)
+    s.send(fullcommand.encode('utf-8'))
     commands = fullcommand.split(' ', 1)
     file = commands[1]
-    with open(file, 'wb') as outfile:
+    with open(file, 'w') as outfile:
         while True:
             data = s.recv(1024)
             if not data:
                 break
-            outfile.write(data)
+            outfile.write(data.decode('utf-8'))
         outfile.close()
     print("File downloaded")
     return
 
+def discon():
+    s.close()
+    print("Disonnected")
+
 while True:
     str = input("Command?:\n")
-    if str.upper() == "QUIT":
+    commands = str.split(' ', 1)
+    if commands[0] == "QUIT":
         print("Goodbye")
+        discon()
         quit()
         break
-    elif str.upper() == "CONN":
-        connect()
-    elif str.upper() == "UPLD":
-        upload()
-    elif str.upper() == "LIST":
+    elif commands[0] == "CONN":
+        conn()
+    elif commands[0] == "UPLD":
+        upload(str)
+    elif commands[0] == "LIST":
         givelist()
-    elif str.upper() == "DWLD":
-        download()
+    elif commands[0] == "DWLD":
+        download(str)
     else:
         print("INVALID COMMAND")
