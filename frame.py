@@ -32,6 +32,7 @@ def download(fullcommand):
     with open(file, 'w') as outfile:
         while True:
             data = s.recv(1024)
+            data.decode('utf-8')
             if not data:
                 break
             outfile.write(data.decode('utf-8'))
