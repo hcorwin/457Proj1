@@ -6,29 +6,37 @@ port = 65432
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.bind((host, port))
-socket.listen(1)
+socket.listen(5)
 while True:
+    print("am i getting hit")
     connection, address = socket.accept()
     command = connection.recv(1024)
-    command.decode('utf-8')
-    if (command == 'quit'):
+    print("where am i")
+    if (command == 'QUIT'):
+        print("quiting")
+        connection.close()
+        socket.close()
         break
     else:
         commands = command.decode().split(' ', 1)
+        print(commands[0] + " 1 " + commands[1])
         file = commands[1]
+        print("what the")
         if (commands[0] == 'UPLD'):
-            with open(file, 'w') as writefile:
+            with open(file, 'wb') as writefile:
+                print("loop3")
                 while True:
-                    data = connection.recv(1024)
+                    data = connection.recv(1024).decode()
+                    print(data + "***")
                     #if data empty
                     if not data:
                         break
-                    writefile.write(data.decode('utf-8'))
-                    writefile.close()
-                    break
+                    writefile.write(data.encode())
+            writefile.close()
         elif (commands[0] == 'DWLD'):
-            with open(file, 'r') as getfile:
+            print("?")
+            with open(file, 'rb') as getfile:
                 for data in getfile:
-                    connection.sendall(data.encode('utf-8'))
-    connection.close()
-socket.close()
+                    print("loop4")
+                    connection.sendall(data)
+            getfile.close()
