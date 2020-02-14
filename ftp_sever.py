@@ -32,6 +32,7 @@ while True:
                     if not data:
                         break
                     writefile.write(data.encode())
+                    break
             writefile.close()
         elif (commands[0] == 'DWLD'):
             print("?")
