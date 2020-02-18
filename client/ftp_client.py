@@ -22,6 +22,6 @@ def disconnect(ftp):
     ftp.quit()
 
 
-def connect(ftp):
-    ftp = ftplib.FTP("127.0.0.1")
-    ftp.login("user", "123")
+#def connect(ftp):
+ #   ftp = ftplib.FTP("127.0.0.1")
+   # ftp.login("user", "123")

@@ -15,7 +15,7 @@ while True:
 
     # Receive Command from client
     command = connection.recv(1024)
-    print("Command received: ", (command.decode('UTF-8')))
+    print("Command received: ", command.decode('UTF-8'))
 
     if (command.decode('UTF-8') == 'QUIT'):
         print("See you again client -", address)
@@ -25,21 +25,24 @@ while True:
         commands = command.decode().split(' ', 1)
         file = commands[1]
 
+        # Receive incoming data, write to file and upload file to the server
         if (commands[0] == 'UPLD'):
             with open(file, 'w') as writefile:
                 while True:
                     data = connection.recv(1024)
-                    print("Data=%s", (data))
-                    #if data empty
+                    # if data is empty
                     if not data:
                         break
                     writefile.write(data.decode('UTF-8'))
                     writefile.close()
                     break
+
+        # Send all data from file to client to download
         elif (commands[0] == 'DWLD'):
-            with open(file, 'r') as getfile:
-                for data in getfile:
+            with open(file, 'r') as readfile:
+                for data in readfile:
                     connection.sendall(data.encode('UTF-8'))
+        break
 
     connection.close()
 socket.close()
