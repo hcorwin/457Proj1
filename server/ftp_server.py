@@ -55,7 +55,7 @@ while True:
                         break
 
             # Send all data from file to client to download
-            elif (commands[0] == 'DWLD'):
+            elif (commands[0] == 'RETRIEVE'):
                 print("Downloading", file)
                 with open(file, 'r') as readfile:
                     for data in readfile:
