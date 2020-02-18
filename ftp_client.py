@@ -2,14 +2,16 @@ import ftplib
 
 
 def upload(ftp, filename):
-    ftp.storlines("STOR " + filename, open(filename))
-
+    try:
+        ftp.storbinary('STOR ' + filename, open(filename, 'rb'))
+    except:
+        print("Error, unable to upload.")
 
 def download(ftp, filename):
     try:
-        ftp.retrbinary("RETR " + filename, open(filename, 'wb').write)
+        ftp.retrbinary('RETR ' + filename, open(filename, 'wb').write, 1024)
     except:
-        print("Error, unable to download")
+        print("Error, unable to download.")
 
 
 def listall(ftp):
