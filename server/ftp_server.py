@@ -56,11 +56,12 @@ while True:
 
             # Send all data from file to client to download
             elif (commands[0] == 'DWLD'):
-                print("Downloading", file, "in progress!")
+                print("Downloading", file)
                 with open(file, 'r') as readfile:
                     for data in readfile:
                         connection.sendall(data.encode('UTF-8'))
-
+                    readfile.close()
+                    break
     break
 
 socket.close()
