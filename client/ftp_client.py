@@ -13,18 +13,19 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 def connect():
     # Socket connects to server
     s.connect((HOST, PORT))
-    print("\nConnected to server - (", HOST, ",", PORT, ")")
+    print(f"+ Connected to server - {HOST}:{PORT}")
 
 
 def disconnect(command):
+    print("Goodbye server!")
+
     # Socket sends encoded command to server
     s.send(command.encode('UTF-8'))
 
-    print("Goodbye server!")
-    print("Disonnected")
-
     # Socket disconnects from server
     s.close()
+
+    print("\n+ Disonnected")
 
 
 def upload(fullcommand):
@@ -82,7 +83,7 @@ def getlist(command):
 
 
 while True:
-    str = input("\nCommand? ")
+    str = input("\n+ COMMAND: ")
     commands = str.split(' ', 1)
 
     if commands[0] == "QUIT":
@@ -98,5 +99,5 @@ while True:
     elif commands[0] == "RETRIEVE":
         download(str)
     else:
-        print("INVALID COMMAND")
+        print("+ INVALID COMMAND")
 

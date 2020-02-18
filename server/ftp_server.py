@@ -10,20 +10,20 @@ socket.bind((host, port))  # Bind to port
 socket.listen(1)  # Wait for client connection
 
 while True:
-    print("Waiting to establish connection with someone...")
+    print("+ Waiting to establish connection with someone...")
 
     # Establish connection with client
     connection, address = socket.accept()
-    print("\nConnected with client -", address)
+    print(f"+ Connected with client - {address}")
 
     while True:
         # Receive Command from client
         command = connection.recv(1024)
-        print("\nCommand received: ", command.decode('UTF-8'))
+        print("\n+ Command received: ", command.decode('UTF-8'))
 
         if (command.decode('UTF-8') == 'QUIT'):
             # Close connection with client and then close the server
-            print("\nSee you again client -", address)
+            print(f"See you again client - {address}")
             connection.close()
             break
 
@@ -42,8 +42,8 @@ while True:
             file = commands[1]
 
             # Receive incoming data, write to file and upload file to the server
-            if (commands[0] == 'UPLD'):
-                print("Uploading", file, "--- Please be patient!")
+            if (commands[0] == 'STORE'):
+                print(f"Uploading {file}, please be patient...")
                 with open(file, 'w') as writefile:
                     while True:
                         data = connection.recv(1024)
@@ -53,13 +53,15 @@ while True:
                         writefile.write(data.decode('UTF-8'))
                         writefile.close()
                         break
+                print("Upload COMPLETE!")
 
             # Send all data from file to client to download
-            elif (commands[0] == 'DWLD'):
-                print("Downloading", file, "in progress!")
+            elif (commands[0] == 'RETRIEVE'):
+                print(f"Downloading {file}...")
                 with open(file, 'r') as readfile:
                     for data in readfile:
                         connection.sendall(data.encode('UTF-8'))
+                print("Download COMPLETE!")
 
     break
 
