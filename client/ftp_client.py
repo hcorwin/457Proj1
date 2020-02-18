@@ -4,15 +4,17 @@ import os
 import struct
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 65432        # The port used by the server
+PORT = 65432  # The port used by the server
 BUFFER = 1024
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 
+
 def conn():
     # Socket connects to server
     s.connect((HOST, PORT))
-    print("\nConnected to server - (",HOST,",",PORT,")")
+    print("\nConnected to server - (", HOST, ",", PORT, ")")
+
 
 def discon(command):
     # Socket sends encoded command to server
@@ -23,6 +25,7 @@ def discon(command):
 
     # Socket disconnects from server
     s.close()
+
 
 def upload(fullcommand):
     # Socket sends encoded command to server
@@ -39,6 +42,7 @@ def upload(fullcommand):
 
     print("Successfully uploaded file:", file)
     return
+
 
 def download(fullcommand):
     # Socket sends encoded command to server
@@ -62,9 +66,19 @@ def download(fullcommand):
     print("Successfully downloaded file:", file)
     return
 
-def getlist(command):
-    print("Server directory:")
 
+def getlist(command):
+    # Socket sends encoded command to server
+    s.send(command.encode('UTF-8'))
+
+    # Receive list of files in the server
+    data = s.recv(1024)
+    dirlist = data.decode('UTF-8').split(' ')
+
+    # Print out the list of files
+    print("Server directory:")
+    for filename in dirlist:
+        print(">", filename)
 
 
 while True:
@@ -85,3 +99,4 @@ while True:
         download(str)
     else:
         print("INVALID COMMAND")
+

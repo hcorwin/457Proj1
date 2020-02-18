@@ -3,12 +3,11 @@ import os
 import sys
 
 host = "127.0.0.1"  # The server's hostname or IP address
-port = 65432        # The port used by the server
+port = 65432  # The port used by the server
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
-socket.bind((host, port))   # Bind to port
-socket.listen(1)            # Wait for client connection
-
+socket.bind((host, port))  # Bind to port
+socket.listen(1)  # Wait for client connection
 
 while True:
     print("Waiting to establish connection with someone...")
@@ -22,12 +21,21 @@ while True:
         command = connection.recv(1024)
         print("\nCommand received: ", command.decode('UTF-8'))
 
-
         if (command.decode('UTF-8') == 'QUIT'):
             # Close connection with client and then close the server
             print("\nSee you again client -", address)
             connection.close()
             break
+
+        # Send list of files in the server
+        elif (command.decode('UTF-8') == 'LIST'):
+            data = os.listdir()
+            print("Sending directory list:")
+            for line in data:
+                print(">", line)
+                connection.send(line.encode('UTF-8'))
+                connection.send(' '.encode('UTF-8'))
+
         else:
             # Tokenize command and save filename
             commands = command.decode().split(' ', 1)
