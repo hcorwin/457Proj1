@@ -10,13 +10,13 @@ BUFFER = 1024
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 
 
-def conn():
+def connect():
     # Socket connects to server
     s.connect((HOST, PORT))
     print("\nConnected to server - (", HOST, ",", PORT, ")")
 
 
-def discon(command):
+def disconnect(command):
     # Socket sends encoded command to server
     s.send(command.encode('UTF-8'))
 
@@ -86,16 +86,16 @@ while True:
     commands = str.split(' ', 1)
 
     if commands[0] == "QUIT":
-        discon(str)
+        disconnect(str)
         quit()
         break
-    elif commands[0] == "CONN":
-        conn()
-    elif commands[0] == "UPLD":
+    elif commands[0] == "CONNECT":
+        connect()
+    elif commands[0] == "STORE":
         upload(str)
     elif commands[0] == "LIST":
         getlist(str)
-    elif commands[0] == "DWLD":
+    elif commands[0] == "RETRIEVE":
         download(str)
     else:
         print("INVALID COMMAND")
