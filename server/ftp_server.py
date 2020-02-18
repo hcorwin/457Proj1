@@ -1,4 +1,5 @@
 import socket
+import os
 import sys
 
 host = "127.0.0.1"  # The server's hostname or IP address
@@ -10,20 +11,21 @@ socket.listen(1)            # Wait for client connection
 
 
 while True:
-    print("1")
+    print("Waiting to establish connection with someone...")
+
     # Establish connection with client
     connection, address = socket.accept()
-    print("Connected with client -", address)
+    print("\nConnected with client -", address)
 
     while True:
-        print("2")
         # Receive Command from client
         command = connection.recv(1024)
-        print("Command received: ", command.decode('UTF-8'))
+        print("\nCommand received: ", command.decode('UTF-8'))
+
 
         if (command.decode('UTF-8') == 'QUIT'):
-            print("3")
-            print("See you again client -", address)
+            # Close connection with client and then close the server
+            print("\nSee you again client -", address)
             connection.close()
             break
         else:
@@ -33,26 +35,23 @@ while True:
 
             # Receive incoming data, write to file and upload file to the server
             if (commands[0] == 'UPLD'):
-                print("4")
+                print("Uploading", file, "--- Please be patient!")
                 with open(file, 'w') as writefile:
                     while True:
-                        print("5")
                         data = connection.recv(1024)
                         # if data is empty
                         if not data:
                             break
                         writefile.write(data.decode('UTF-8'))
                         writefile.close()
-                        print("5.1")
                         break
 
             # Send all data from file to client to download
             elif (commands[0] == 'DWLD'):
-                print("6")
+                print("Downloading", file, "in progress!")
                 with open(file, 'r') as readfile:
                     for data in readfile:
                         connection.sendall(data.encode('UTF-8'))
-            print("7")
 
     break
 
