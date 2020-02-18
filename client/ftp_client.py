@@ -62,9 +62,8 @@ def download(fullcommand):
                 break
             outfile.write(data.decode('UTF-8'))
             outfile.close()
+            print("Successfully downloaded file:", file)
             break
-
-    print("Successfully downloaded file:", file)
     return
 
 
