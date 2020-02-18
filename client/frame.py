@@ -15,11 +15,11 @@ def conn():
     print("Connected to server - (",HOST,",",PORT,")")
 
 def discon(command):
-    print("Goodbye server!")
-    print("Disonnected")
-
     # Socket sends encoded command to server
     s.send(command.encode('UTF-8'))
+
+    print("Goodbye server!")
+    print("Disonnected")
 
     # Socket disconnects from server
     s.close()
@@ -57,6 +57,7 @@ def download(fullcommand):
                 break
             outfile.write(data.decode('UTF-8'))
             outfile.close()
+            break
 
     print("Successfully downloaded file:", file)
     return
