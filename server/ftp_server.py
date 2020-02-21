@@ -24,19 +24,15 @@ while True:
             connection.close()
             break
             # Send list of files in the server
-        elif (command.decode('UTF-8') == 'HMANY'):
-            data = os.listdir()
-            count = 0
-            for line in data:
-                count += 1
-            connection.send(str(count).encode('UTF-8'))
         elif (command.decode('UTF-8') == 'LIST'):
             data = os.listdir()
             print("Sending directory list:")
+            string = ' '
             for line in data:
                 print(">", line)
-                connection.send(line.encode('UTF-8'))
-                #connection.send(' '.encode('UTF-8'))
+                string += line + ' '
+            connection.send(string.encode('UTF-8'))
+            print(string)
         else:
             # Tokenize command and save filename
             commands = command.decode().split(' ', 1)
