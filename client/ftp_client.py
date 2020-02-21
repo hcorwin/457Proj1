@@ -95,14 +95,7 @@ while True:
     elif commands[0] == "UPLD":
         upload(str)
     elif commands[0] == "LIST":
-        s.send("HMANY".encode('UTF-8'))
-        data = s.recv(1024)
-        strings = data.decode('UTF-8')
-        num = int(strings)
-        i = 0
-        while i < num:
-            givelist(str)
-            i +=1
+        givelist(str)
     elif commands[0] == "DWLD":
         download(str)
     else:
