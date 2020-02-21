@@ -4,29 +4,25 @@ import os
 import struct
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 65432  # The port used by the server
+PORT = 65432        # The port used by the server
 BUFFER = 1024
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 
-
-def connect():
+def conn():
     # Socket connects to server
     s.connect((HOST, PORT))
-    print(f"+ Connected to server - {HOST}:{PORT}")
+    print("Connected to server - (",HOST,",",PORT,")")
 
-
-def disconnect(command):
-    print("Goodbye server!")
-
+def discon(command):
     # Socket sends encoded command to server
     s.send(command.encode('UTF-8'))
 
+    print("Goodbye server!")
+    print("Disonnected")
+
     # Socket disconnects from server
     s.close()
-
-    print("\n+ Disonnected")
-
 
 def upload(fullcommand):
     # Socket sends encoded command to server
@@ -44,7 +40,6 @@ def upload(fullcommand):
     print("Successfully uploaded file:", file)
     return
 
-
 def download(fullcommand):
     # Socket sends encoded command to server
     s.send(fullcommand.encode('UTF-8'))
@@ -52,6 +47,7 @@ def download(fullcommand):
     # Tokenize command and save filename
     commands = fullcommand.split(' ', 1)
     file = commands[1]
+    string = ''
 
     # Receive incoming data, write to file and download file to client
     with open(file, 'w') as outfile:
@@ -60,43 +56,55 @@ def download(fullcommand):
             # if data is empty
             if not data:
                 break
-            outfile.write(data.decode('UTF-8'))
-            outfile.close()
-            print("Successfully downloaded file:", file)
-            break
+            if data.decode('UTF-8') == 'no':
+                print("File not found")
+                string = 'remove'
+                break
+            else:
+                outfile.write(data.decode('UTF-8'))
+                outfile.close()
+                print("Successfully downloaded file:", file)
+                break
+    if string == 'remove':
+        os.remove(file)
     return
 
+def givelist(fullcommand):
+        # Socket sends encoded command to server
+        s.send(fullcommand.encode('UTF-8'))
 
-def getlist(command):
-    # Socket sends encoded command to server
-    s.send(command.encode('UTF-8'))
+        # Receive list of files in the server
+        data = s.recv(1024)
+        dirlist = data.decode('UTF-8').split(' ')
 
-    # Receive list of files in the server
-    data = s.recv(1024)
-    dirlist = data.decode('UTF-8').split(' ')
-
-    # Print out the list of files
-    print("Server directory:")
-    for filename in dirlist:
-        print(">", filename)
+        # Print out the list of files
+        for filename in dirlist:
+            print(">", filename)
 
 
 while True:
-    str = input("\n+ COMMAND: ")
+    str = input("Command? ")
     commands = str.split(' ', 1)
 
     if commands[0] == "QUIT":
-        disconnect(str)
+        discon(str)
         quit()
         break
-    elif commands[0] == "CONNECT":
-        connect()
-    elif commands[0] == "STORE":
+    elif commands[0] == "CONN":
+        conn()
+    elif commands[0] == "UPLD":
         upload(str)
     elif commands[0] == "LIST":
-        getlist(str)
-    elif commands[0] == "RETRIEVE":
+        s.send("HMANY".encode('UTF-8'))
+        data = s.recv(1024)
+        strings = data.decode('UTF-8')
+        num = int(strings)
+        i = 0
+        while i < num:
+            givelist(str)
+            i +=1
+    elif commands[0] == "DWLD":
         download(str)
     else:
-        print("+ INVALID COMMAND")
+        print("INVALID COMMAND")
 
