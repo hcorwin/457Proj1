@@ -25,24 +25,23 @@ def discon(command):
     s.close()
 
 def upload(fullcommand):
-    # Socket sends encoded command to server
-    s.send(fullcommand.encode('UTF-8'))
-
     # Tokenize command and save filename
     commands = fullcommand.split(' ', 1)
     file = commands[1]
     dirlist = os.listdir()
 
     if file in dirlist:
+        # Socket sends encoded command to server
+        s.send(fullcommand.encode('UTF-8'))
+
         # Send all data from file to server to upload
         with open(file, 'r') as infile:
             for data in infile:
+                print("Uploading a file...")
                 s.sendall(data.encode('UTF-8'))
-
-        print("Successfully uploaded file:", file)
+                print("Successfully uploaded file:", file)
     else:
         print("File not found")
-        s.send("no".encode('UTF-8'))
     return
 
 def download(fullcommand):
@@ -66,10 +65,12 @@ def download(fullcommand):
                 string = 'remove'
                 break
             else:
+                print("Downloading a file...")
                 outfile.write(data.decode('UTF-8'))
                 outfile.close()
                 print("Successfully downloaded file:", file)
                 break
+
     if string == 'remove':
         os.remove(file)
     return
@@ -90,9 +91,8 @@ def givelist(fullcommand):
 while True:
     str = input("\nCommand? ")
     commands = str.split(' ', 1)
-    print(commands)
 
-    if commands[0] == "QUIT":
+    if commands[0] == "QUIT" and len(commands) == 1:
         discon(str)
         quit()
         break
@@ -100,7 +100,7 @@ while True:
         conn()
     elif commands[0] == "UPLD" and len(commands) > 1:
         upload(str)
-    elif commands[0] == "LIST":
+    elif commands[0] == "LIST" and len(commands) == 1:
         givelist(str)
     elif commands[0] == "DWLD" and len(commands) > 1:
         download(str)

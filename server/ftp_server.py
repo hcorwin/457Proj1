@@ -47,10 +47,16 @@ while True:
                         # if data is empty
                         if not data:
                             break
-                        writefile.write(data.decode('UTF-8'))
-                        writefile.close()
-                        print(data)
-                        break
+                        if data.decode('UTF-8') == 'no':
+                            print("Failed to upload file!")
+                            string = 'remove'
+                            break
+                        else:
+                            print(f"Client {address} is uploading {file}...")
+                            writefile.write(data.decode('UTF-8'))
+                            writefile.close()
+                            print("Upload complete!")
+                            break
 
             # Send all data from file to client to download
             elif (commands[0] == 'DWLD'):
