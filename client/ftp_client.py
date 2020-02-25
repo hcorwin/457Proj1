@@ -90,6 +90,7 @@ def givelist(fullcommand):
 while True:
     str = input("\nCommand? ")
     commands = str.split(' ', 1)
+    print(commands)
 
     if commands[0] == "QUIT":
         discon(str)
@@ -97,11 +98,11 @@ while True:
         break
     elif commands[0] == "CONN":
         conn()
-    elif commands[0] == "UPLD":
+    elif commands[0] == "UPLD" and len(commands) > 1:
         upload(str)
     elif commands[0] == "LIST":
         givelist(str)
-    elif commands[0] == "DWLD":
+    elif commands[0] == "DWLD" and len(commands) > 1:
         download(str)
     else:
         print("INVALID COMMAND")
