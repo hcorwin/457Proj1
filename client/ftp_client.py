@@ -12,7 +12,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 def conn():
     # Socket connects to server
     s.connect((HOST, PORT))
-    print("Connected to server - (",HOST,",",PORT,")")
+    print(f"Connected to server - ({HOST}, {PORT})")
 
 def discon(command):
     # Socket sends encoded command to server
@@ -31,13 +31,18 @@ def upload(fullcommand):
     # Tokenize command and save filename
     commands = fullcommand.split(' ', 1)
     file = commands[1]
+    dirlist = os.listdir()
 
-    # Send all data from file to server to upload
-    with open(file, 'r') as infile:
-        for data in infile:
-            s.sendall(data.encode('UTF-8'))
+    if file in dirlist:
+        # Send all data from file to server to upload
+        with open(file, 'r') as infile:
+            for data in infile:
+                s.sendall(data.encode('UTF-8'))
 
-    print("Successfully uploaded file:", file)
+        print("Successfully uploaded file:", file)
+    else:
+        print("File not found")
+        s.send("no".encode('UTF-8'))
     return
 
 def download(fullcommand):
@@ -57,7 +62,7 @@ def download(fullcommand):
             if not data:
                 break
             if data.decode('UTF-8') == 'no':
-                print("File not found")
+                print("File not found!")
                 string = 'remove'
                 break
             else:
@@ -83,7 +88,7 @@ def givelist(fullcommand):
 
 
 while True:
-    str = input("Command? ")
+    str = input("\nCommand? ")
     commands = str.split(' ', 1)
 
     if commands[0] == "QUIT":

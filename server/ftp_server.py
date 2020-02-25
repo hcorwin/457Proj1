@@ -11,16 +11,17 @@ socket.listen(1)  # Wait for client connection
 
 while True:
     # Establish connection with client
+    print("Waiting for someone to establish connection...")
     connection, address = socket.accept()
-    print("Connected with client -", address)
+    print(f"Connected with client - {address}")
 
     while True:
         # Receive Command from client
         command = connection.recv(1024)
-        print("Command received: ", command.decode('UTF-8'))
+        print("\nCommand received: ", command.decode('UTF-8'))
 
         if (command.decode('UTF-8') == 'QUIT'):
-            print("See you again client -", address)
+            print(f"See you again client - {address}")
             connection.close()
             break
             # Send list of files in the server
@@ -37,7 +38,6 @@ while True:
             # Tokenize command and save filename
             commands = command.decode().split(' ', 1)
             file = commands[1]
-            print(file)
 
             # Receive incoming data, write to file and upload file to the server
             if (commands[0] == 'UPLD'):
@@ -58,9 +58,11 @@ while True:
                 if file in data:
                     with open(file, 'r') as readfile:
                         for data in readfile:
+                            print(f"Client {address} is downloading {file}...")
                             connection.sendall(data.encode('UTF-8'))
+                            print("Download complete!")
                 else:
-                    print("File not found")
+                    print("File not found!")
                     connection.send("no".encode('UTF-8'))
 
     break
