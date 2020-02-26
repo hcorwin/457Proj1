@@ -3,7 +3,7 @@ import sys
 import os
 
 host = "127.0.0.1"  # The server's hostname or IP address
-port = 65432  # The port used by the server
+port = 65432        # The port used by the server
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 socket.bind((host, port))  # Bind to port

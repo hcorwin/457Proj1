@@ -3,13 +3,19 @@ import sys
 import os
 import struct
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 65432        # The port used by the server
 BUFFER = 1024
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create a socket object
 
-def conn():
+def conn(fullcommand):
+    # Tokenize command and save filename
+    commands = fullcommand.split(' ')
+
+    # Input server's hostname or IP address
+    HOST = commands[1]
+    # Input port number used by the server
+    PORT = int(commands[2])
+
     # Socket connects to server
     s.connect((HOST, PORT))
     print(f"Connected to server - ({HOST}, {PORT})")
@@ -100,9 +106,9 @@ while True:
             break
         except:
             quit()
-    elif commands[0] == "CONN":
+    elif commands[0] == "CONN" and len(commands) > 1:
         try:
-            conn()
+            conn(str)
         except:
             print("Server Down")
     elif commands[0] == "UPLD" and len(commands) > 1:
