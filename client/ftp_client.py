@@ -92,18 +92,34 @@ while True:
     str = input("\nCommand? ")
     commands = str.split(' ', 1)
 
+
     if commands[0] == "QUIT" and len(commands) == 1:
-        discon(str)
-        quit()
-        break
+        try:
+            discon(str)
+            quit()
+            break
+        except:
+            quit()
     elif commands[0] == "CONN":
-        conn()
+        try:
+            conn()
+        except:
+            print("Server Down")
     elif commands[0] == "UPLD" and len(commands) > 1:
-        upload(str)
+        try:
+            upload(str)
+        except:
+            print("Not connected")
     elif commands[0] == "LIST" and len(commands) == 1:
-        givelist(str)
+        try:
+            givelist(str)
+        except:
+            print("Not connected")
     elif commands[0] == "DWLD" and len(commands) > 1:
-        download(str)
+        try:
+            download(str)
+        except:
+            print("Not connected")
     else:
         print("INVALID COMMAND")
 
